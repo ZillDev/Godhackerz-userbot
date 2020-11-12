@@ -59,6 +59,6 @@ async def _(event):
         return
     end = datetime.now()
     ms = (end - start).seconds
-    await event.edit("Created BarCode in {} seconds".format(ms))
+    await event.edit("BarCode {} saniye içinde oluşturuldu.".format(ms))
     await asyncio.sleep(5)
     await event.delete()
