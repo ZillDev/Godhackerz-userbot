@@ -27,17 +27,17 @@ from userbot import BOTLOG, BOTLOG_CHATID, CMD_HELP, bot
 from userbot.utils import register, errors_handler
 
 # =================== CONSTANT ===================
-PP_TOO_SMOL = "`The image is too small`"
-PP_ERROR = "`Failure while processing the image`"
-NO_ADMIN = "`I am not an admin nub nibba!`"
+PP_TOO_SMOL = "`Görüntü çok küçük`"
+PP_ERROR = "`Görüntüyü işlerken hata`"
+NO_ADMIN = "`Ben bir yönetici değilim!`"
 NO_PERM = "`I don't have sufficient permissions! This is so sed. Alexa play despacito`"
 NO_SQL = "`Running on Non-SQL mode!`"
 
-CHAT_PP_CHANGED = "`Chat Picture Changed`"
-CHAT_PP_ERROR = "`Some issue with updating the pic,`" \
+CHAT_PP_CHANGED = "`Sohbet Resmi Değiştirildi`"
+CHAT_PP_ERROR = "`Resmi güncellemeyle ilgili bazı sorunlar,`" \
                 "`maybe coz I'm not an admin,`" \
                 "`or don't have enough rights.`"
-INVALID_MEDIA = "`Invalid Extension`"
+INVALID_MEDIA = "`Geçersiz Uzantı`"
 
 BANNED_RIGHTS = ChatBannedRights(
     until_date=None,
@@ -71,9 +71,9 @@ UNMUTE_RIGHTS = ChatBannedRights(until_date=None, send_messages=False)
 @register(outgoing=True, pattern="^.setgpic$")
 @errors_handler
 async def set_group_photo(gpic):
-    """ For .setgpic command, changes the picture of a group """
+    """ .Setgpic komutu ile grubun resmini değiştirir """
     if not gpic.is_group:
-        await gpic.edit("`I don't think this is a group.`")
+        await gpic.edit("`Bunun bir grup olduğunu sanmıyorum.`")
         return
     replymsg = await gpic.get_reply_message()
     chat = await gpic.get_chat()
@@ -109,7 +109,7 @@ async def set_group_photo(gpic):
 @register(outgoing=True, pattern="^.promote(?: |$)(.*)")
 @errors_handler
 async def promote(promt):
-    """ For .promote command, promotes the replied/tagged person """
+    """ .Promote komutu için, yanıtlanan / etiketlenen kişiyi yükseltir """
     # Get targeted chat
     chat = await promt.get_chat()
     # Grab admin status or creator in a chat
@@ -128,7 +128,7 @@ async def promote(promt):
                                  delete_messages=True,
                                  pin_messages=True)
 
-    await promt.edit("`Promoting...`")
+    await promt.edit("`Yükseltiliyor...`")
     user, rank = await get_user_from_event(promt)
     if not rank:
         rank = "admeme"  # Just in case.
@@ -141,7 +141,7 @@ async def promote(promt):
     try:
         await promt.client(
             EditAdminRequest(promt.chat_id, user.id, new_rights, rank))
-        await promt.edit("`Promoted Successfully! Now gib Party`")
+        await promt.edit("`Başarıyla Yükseltildi! Şimdi gib Parti`")
 
     # If Telethon spit BadRequestError, assume
     # we don't have Promote permission
@@ -160,7 +160,7 @@ async def promote(promt):
 @register(outgoing=True, pattern="^.demote(?: |$)(.*)")
 @errors_handler
 async def demote(dmod):
-    """ For .demote command, demotes the replied/tagged person """
+    """ .Demote komutu için, yanıtlanan / etiketlenen kişinin sıralamasını düşürür """
     # Admin right check
     chat = await dmod.get_chat()
     admin = chat.admin_rights
@@ -171,7 +171,7 @@ async def demote(dmod):
         return
 
     # If passing, declare that we're going to demote
-    await dmod.edit("`Demoting...`")
+    await dmod.edit("`İndirgeme...`")
     rank = "admeme"  # dummy rank, lol.
     user = await get_user_from_event(dmod)
     user = user[0]
@@ -197,7 +197,7 @@ async def demote(dmod):
     except BadRequestError:
         await dmod.edit(NO_PERM)
         return
-    await dmod.edit("`Demoted this retard Successfully!`")
+    await dmod.edit("`Bu kişi başarıyla düşürdü!`")
 
     # Announce to the logging group if we have demoted successfully
     if BOTLOG:
@@ -228,7 +228,7 @@ async def ban(bon):
         return
 
     # Announce that we're going to whack the pest
-    await bon.edit("`Whacking the pest!`")
+    await bon.edit("`Haşere vurmak!`")
 
     try:
         await bon.client(EditBannedRequest(bon.chat_id, user.id,
@@ -243,15 +243,15 @@ async def ban(bon):
             await reply.delete()
     except BadRequestError:
         await bon.edit(
-            "`I dont have message nuking rights! But still he was banned!`")
+            "`Mesaj bombalama hakkım yok! Ama yine de yasaklandı!`")
         return
     # Delete message and then tell that the command
     # is done gracefully
     # Shout out the ID, so that fedadmins can fban later
     if reason:
-        await bon.edit(f"Loser `{str(user.id)}` was banned !!\nReason: {reason}")
+        await bon.edit(f"Ezik `{str(user.id)}` banlandı !!\nSebep: {reason}")
     else:
-        await bon.edit(f"Bitch `{str(user.id)}` was banned !!")
+        await bon.edit(f"Orospu `{str(user.id)}` banlandı !!")
     # Announce to the logging group if we have banned the person
     # successfully!
     if BOTLOG:
@@ -264,7 +264,7 @@ async def ban(bon):
 @register(outgoing=True, pattern="^.unban(?: |$)(.*)")
 @errors_handler
 async def nothanos(unbon):
-    """ For .unban command, unbans the replied/tagged person """
+    """ .Unban komutu için, yanıtlanan / etiketlenen kişinin yasağını kaldırır """
     # Here laying the sanity check
     chat = await unbon.get_chat()
     admin = chat.admin_rights
@@ -276,7 +276,7 @@ async def nothanos(unbon):
         return
 
     # If everything goes well...
-    await unbon.edit("`Unbanning...`")
+    await unbon.edit("`Yasaklama kaldırılıyor...`")
 
     user = await get_user_from_event(unbon)
     user = user[0]
@@ -288,7 +288,7 @@ async def nothanos(unbon):
     try:
         await unbon.client(
             EditBannedRequest(unbon.chat_id, user.id, UNBAN_RIGHTS))
-        await unbon.edit("```Unbanned Successfully. Granting another chance.```")
+        await unbon.edit("```Başarıyla Kaldırıldı. Bir şans daha vermek.```")
 
         if BOTLOG:
             await unbon.client.send_message(
@@ -296,14 +296,14 @@ async def nothanos(unbon):
                 f"USER: [{user.first_name}](tg://user?id={user.id})\n"
                 f"CHAT: {unbon.chat.title}(`{unbon.chat_id}`)")
     except UserIdInvalidError:
-        await unbon.edit("`Uh oh my unban logic broke!`")
+        await unbon.edit("`Ah ah ahlaksız mantığım bozuldu!`")
 
 
 @register(outgoing=True, pattern="^.mute(?: |$)(.*)")
 @errors_handler
 async def spider(spdr):
     """
-    This function is basically muting peeps
+    Bu işlev temelde bakışları susturmaktır
     """
     # Check if the function running under SQL mode
     try:
